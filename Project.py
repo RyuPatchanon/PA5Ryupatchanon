@@ -16,16 +16,18 @@ def extract_text_from_url(article_url):
     article.parse()
     return article.text
 
-def summarize_text(text):
-    response = openai.Completion.create(
-        engine="davinci",
-        prompt=text,
-        max_tokens=150  # Adjust this parameter to control the length of the summary
+def summarize_text_with_gpt3(text):
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "Summarize the text."},
+            {"role": "user", "content": text}
+        ]
     )
-    return response.choices[0].text.strip()
+    return response.choices[0].message['content']
 
 def main():
-    st.title('Article Text Extractor and Summarizer')
+    st.title('Article Text Extractor and Summarizer with OpenAI GPT-3')
 
     # Input field for article URL
     article_url = st.text_input('Enter the URL of the news article:')
@@ -34,7 +36,7 @@ def main():
         if article_url:
             try:
                 extracted_text = extract_text_from_url(article_url)
-                summary = summarize_text(extracted_text)
+                summary = summarize_text_with_gpt3(extracted_text)
 
                 st.subheader('Extracted Text:')
                 st.write(extracted_text)
