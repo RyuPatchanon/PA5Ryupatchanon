@@ -1,7 +1,6 @@
 import streamlit as st
 import openai
 import pandas as pd
-import json
 
 # Set up the OpenAI API key input in the sidebar
 st.sidebar.title('OpenAI API Key')
@@ -10,48 +9,43 @@ api_key = st.sidebar.text_input('Enter your OpenAI API Key:', type='password')
 # Set the OpenAI API key
 openai.api_key = api_key
 
-def get_recommendations(user_preferences):
+def get_recommendations(user_preference):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "Recommend movies or shows based on my preferences."},
-            {"role": "user", "content": user_preferences}
+            {"role": "system", "content": user_preference},
+            {"role": "user", "content": ""}
         ]
     )
     return response.choices[0].message['content']
 
 def format_recommendations(recommendations):
     recommendations_list = []
-    recommendation_json = []
     # Split the recommendations by lines
     recommendation_lines = recommendations.splitlines()
     for line in recommendation_lines:
-        # Split each line into name and reason
-        name, reason = line.split(' - ')
+        # Split each line into name and summary
+        name, summary = line.split(' - ')
         # Create a dictionary for each recommendation
-        recommendation = {'Name': name.strip(), 'Reason': reason.strip()}
+        recommendation = {'Name': name.strip(), 'Summary': summary.strip()}
         recommendations_list.append(recommendation)
-        recommendation_json.append(json.dumps(recommendation))
-    return recommendations_list, recommendation_json
+    return recommendations_list
 
 def main():
     st.title('Movie or Show Recommendation Generator')
 
     # Input field for user preferences
-    user_preferences = st.text_area('Enter your movie or show preferences:')
+    user_preference = st.text_area('Enter your preference:')
 
     if st.button('Get Recommendations'):
-        if user_preferences:
+        if user_preference:
             try:
-                recommendations = get_recommendations(user_preferences)
-                recommendations_list, recommendation_json = format_recommendations(recommendations)
+                recommendations = get_recommendations(user_preference)
+                recommendations_list = format_recommendations(recommendations)
 
-                st.subheader('Recommendations in Pandas DataFrame:')
+                # Display the recommendations in a Pandas DataFrame with 2 columns
                 df = pd.DataFrame(recommendations_list)
                 st.write(df)
-
-                st.subheader('Recommendations in JSON format:')
-                st.json(recommendation_json)
             except Exception as e:
                 st.error('An error occurred. Please try again.')
                 st.error(f'Error details: {str(e)}')
