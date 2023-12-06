@@ -22,6 +22,7 @@ def get_recommendations(user_preferences):
 
 def format_recommendations(recommendations):
     recommendations_list = []
+    recommendation_json = []
     # Split the recommendations by lines
     recommendation_lines = recommendations.splitlines()
     for line in recommendation_lines:
@@ -30,7 +31,8 @@ def format_recommendations(recommendations):
         # Create a dictionary for each recommendation
         recommendation = {'Name': name.strip(), 'Reason': reason.strip()}
         recommendations_list.append(recommendation)
-    return recommendations_list
+        recommendation_json.append(json.dumps(recommendation))
+    return recommendations_list, recommendation_json
 
 def main():
     st.title('Movie or Show Recommendation Generator')
@@ -42,10 +44,14 @@ def main():
         if user_preferences:
             try:
                 recommendations = get_recommendations(user_preferences)
-                recommendations_list = format_recommendations(recommendations)
+                recommendations_list, recommendation_json = format_recommendations(recommendations)
 
-                st.subheader('Recommendations:')
-                st.json(recommendations_list)
+                st.subheader('Recommendations in Pandas DataFrame:')
+                df = pd.DataFrame(recommendations_list)
+                st.write(df)
+
+                st.subheader('Recommendations in JSON format:')
+                st.json(recommendation_json)
             except Exception as e:
                 st.error('An error occurred. Please try again.')
                 st.error(f'Error details: {str(e)}')
