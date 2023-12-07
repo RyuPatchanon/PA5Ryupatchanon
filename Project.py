@@ -4,13 +4,14 @@ import pandas as pd
 
 # Set up the OpenAI API key input in the sidebar
 st.sidebar.title('OpenAI API Key')
-api_key = st.sidebar.text_input('Enter your OpenAI API Key:', type='password')
+user_api_key = st.sidebar.text_input("OpenAI API key", type="password")
+client = openai.OpenAI(api_key=user_api_key)
 
 # Set the OpenAI API key
 openai.api_key = api_key
 
 def get_recommendations(user_preference):
-    response = openai.ChatCompletion.create(
+    response = client.chat.Completion.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": user_preference},
