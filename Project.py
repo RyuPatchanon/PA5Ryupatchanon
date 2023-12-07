@@ -7,11 +7,8 @@ st.sidebar.title('OpenAI API Key')
 user_api_key = st.sidebar.text_input("OpenAI API key", type="password")
 client = openai.OpenAI(api_key=user_api_key)
 
-# Set the OpenAI API key
-openai.api_key = api_key
-
 def get_recommendations(user_preference):
-    response = client.chat.Completion.create(
+    response = client.chat.completion.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": user_preference},
