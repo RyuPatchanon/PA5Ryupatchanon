@@ -4,24 +4,6 @@ import openai
 import json
 
 def main():
-    st.markdown(
-    """
-    <style>
-    body {
-        background-color: #1f2833;
-        color: #ffffff;
-        font-family: Arial, sans-serif;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-    st.set_page_config(
-        page_title="Movie/Show Recommendation App",
-        page_icon="🎬",
-        layout="wide"
-    )
-
     st.sidebar.header("OpenAI API Key")
     user_api_key = st.sidebar.text_input("Enter your OpenAI API Key")
     
@@ -51,6 +33,20 @@ def main():
             st.table(suggestion_df)
     else:
         st.warning("Please enter your OpenAI API Key in the sidebar.")
+
+    # Add custom CSS for background color and style
+    st.markdown(
+        """
+        <style>
+        body {
+            background-color: #1f2833; /* Your desired background color */
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
 if __name__ == "__main__":
     main()
