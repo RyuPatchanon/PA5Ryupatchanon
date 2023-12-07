@@ -14,7 +14,7 @@ def main():
         st.title("Movie/Show Recommendation App")
 
         user_preference = st.text_input("Enter your preference:")
-        prompt = f"Act as a movie enthusiast. You will receive a description of preference and you should give out movie or show recommendations based on the given preference. List the recommendations in a Json array, one recommendation per line. Each recommendation should have 4 fields: - 'Name' - the name of the recommended show or movie. - 'Reason' - The reason the movie or show is recommended based on user preference. - 'Genre' - the genre of the movie or show - 'Notable' - Notable actors or directors involved, list at most 3 names. Preference: {user_preference}"
+        prompt = f"Act as a movie enthusiast. You will receive a description of preference and you should give out movie or show recommendations based on the given preference. List the recommendations in a Json array, one recommendation per line. Each recommendation should have 5 fields: - 'Name' - the name of the recommended show or movie. - 'Reason' - The reason the show or movie is recommended based on user preference. - 'Summary' - The summary of the recommended movie or show - 'Genre' - the genre of the movie or show - 'Notable' - Notable actors or directors involved, list at most 3 names. Preference: {user_preference}"
         st.markdown('Input your preference for movie or show. \n\
             The AI will give you suggestions on what to watch.')
         if st.button("Get Recommendations"):
