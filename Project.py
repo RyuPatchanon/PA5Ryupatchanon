@@ -39,7 +39,7 @@ def main():
         """
         <style>
         body {
-            background-color: #1f2833; /* Your desired background color */
+            background-color: #3F250B; /* Dark brown color */
             color: #ffffff;
             font-family: Arial, sans-serif;
         }
