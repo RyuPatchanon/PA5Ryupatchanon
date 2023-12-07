@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import openai
+import json
 
 def main():
     st.sidebar.header("OpenAI API Key")
@@ -25,10 +26,16 @@ def main():
                 model="gpt-3.5-turbo",
                 messages=messages_so_far)
             
-            recommendations = response.choices[0].text.strip().split("\n")
-            recommendations = [rec.split(",") for rec in recommendations]
-            df = pd.DataFrame(recommendations, columns=["Name", "Reason", "Genre", "Notable"])
-            st.dataframe(df)
+            st.markdown('**AI response:**')
+            suggestion_dictionary = response.choices[0].message.content
+
+
+            sd = json.loads(suggestion_dictionary)
+
+            print (sd)
+            suggestion_df = pd.DataFrame.from_dict(sd)
+            print(suggestion_df)
+            st.table(suggestion_df)
     else:
         st.warning("Please enter your OpenAI API Key in the sidebar.")
 
