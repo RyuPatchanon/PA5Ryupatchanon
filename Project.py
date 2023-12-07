@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import openai
+import json
 
 def main():
     st.sidebar.header("OpenAI API Key")
@@ -13,7 +14,7 @@ def main():
         st.title("Movie/Show Recommendation App")
 
         user_preference = st.text_input("Enter your preference:")
-        prompt = f"Act as a movie enthusiast. You will receive a description of preference and you should give out movie or show recommendations based on the given preference. List the recommendations in a 4 column table, one recommendation per line. Each recommendation should have 4 fields: - 'Name' - the name of the recommended show or movie. - 'Reason' - The reason the movie or show is recommended based on user preference. - 'Genre' - the genre of the movie or show - 'Notable' - Notable actors or directors involved, list at most 3 names. Preference: {user_preference}"
+        prompt = f"Act as a movie enthusiast. You will receive a description of preference and you should give out movie or show recommendations based on the given preference. List the recommendations in a Json array, one recommendation per line. Each recommendation should have 4 fields: - 'Name' - the name of the recommended show or movie. - 'Reason' - The reason the movie or show is recommended based on user preference. - 'Genre' - the genre of the movie or show - 'Notable' - Notable actors or directors involved, list at most 3 names. Preference: {user_preference}"
         st.markdown('Input your preference for movie or show. \n\
             The AI will give you suggestions on what to watch.')
         if st.button("Get Recommendations"):
@@ -25,10 +26,16 @@ def main():
                 model="gpt-3.5-turbo",
                 messages=messages_so_far)
             
-            recommendations = response.choices[0].text.strip().split("\n")
-            recommendations = [rec.split(",") for rec in recommendations]
-            df = pd.DataFrame(recommendations, columns=["Name", "Reason", "Genre", "Notable"])
-            st.dataframe(df)
+            st.markdown('**AI response:**')
+            suggestion_dictionary = response.choices[0].message.content
+
+
+            sd = json.loads(suggestion_dictionary)
+
+            print (sd)
+            suggestion_df = pd.DataFrame.from_dict(sd)
+            print(suggestion_df)
+            st.table(suggestion_df)
     else:
         st.warning("Please enter your OpenAI API Key in the sidebar.")
 
